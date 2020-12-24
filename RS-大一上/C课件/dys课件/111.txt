@@ -1,0 +1,255 @@
+作业一、编程实现输入三个数求最大和最小值
+void main()
+{
+    int a,b,c,mx,mi;
+    scanf( "%d%d%d",&a,&b,&c );
+    mx = a>b?a:b;
+    mx = mx>c?mx:c;
+
+    mi = a<b?a:b;
+    mi = mi<c?mi:c;
+    printf( "max= %d ,min= %d \n",mx,mi );
+}
+作业二、输入一个4位正整数，然后反向输出对应的数。
+如输入：1234 则输出 4321 . 特别注意，不能将输入作为字符直接输出。
+void main()
+{
+    int a,a1,a2,a3,a4;
+    scanf("%d",&a );
+    a1 = a%10;         // 个位
+    a2 = (a%100)/10;   // 十位
+    a3 = (a/100)%10;   // 百位  
+    a4 = a/1000;       // 千位    
+    printf("%d%d%d%d \n",a1,a2,a3,a4 );
+}
+
+作业三、按 (YYYYMMDD)格式输入日期，程序输出如下格式日期：
+英文月份，数字日，年.
+eg.输入: 20131025  输出：Oct,25,2013
+void main()
+{
+    char *pM[]={ "Jan" ,"Feb","Mar","Apr","May","Jun",
+                 "Jul","Aug","Sep","Oct","Nov","Dec" };
+    int date,yy,mm,dd;
+    scanf("%d",&date );
+    yy = date/10000;
+    mm = (date%10000)/100;
+    dd = date%100;
+
+    if ( mm<1 || mm>12 || dd<1 || dd>31 ) printf("error input.\n");
+    else{
+        printf("%s,%d,%d\n",pM[mm-1],dd,yy );
+    }
+}
+作业四、用N边形拟合一个圆，输入圆心坐标x0,y0、
+半径R和圆切分的边数N，输出圆周上的各切分点的坐标。
+
+#define PI  3.1415926
+void main()
+{
+    float x0,y0,r,x,y,a;
+    int n,i;
+    scanf("%f%f%f%d",&x0,&y0,&r,&n);
+    if ( n<3 || r<0 ){ printf("Error input\n"); return ; }
+    for( i=0;i<n;i++ ){
+        a = (2*PI)/n*i;
+        x = r*cos(a)+x0;
+        y = r*sin(a)+y0;
+        printf("x[%d]= %f, y[%d]= %f\n",i,x,i,y );
+    }
+}
+
+作业五、求两个矩阵相乘的结果矩阵（可以设定2×2，3×3，5×5等）
+
+#define N   5
+void main()
+{
+    float m1[N][N],m2[N][N],m3[N][N];
+    int i,j,k;
+
+    printf("Please M1[%d][%d]:\n",N );
+    for( i=0;i<N;i++ ){
+        for( j=0;j<N;j++ ){
+            scanf("%f",&m1[i][j] );
+        }
+    }
+    printf("Please M2[%d][%d]:\n",N );
+    for( i=0;i<N;i++ ){
+        for( j=0;j<N;j++ ){
+            scanf("%f",&m2[i][j] );
+        }
+    }
+
+    for( i=0;i<N;i++ ){
+        for( j=0;j<N;j++ ){
+            m3[i][j] = 0;
+            for( k=0;k<N;k++ ){
+                m3[i][j] += m1[i][k]*m2[k][j];
+            }
+        }
+    }
+
+    printf("The M3[%d][%d] is:\n",N );
+    for( i=0;i<N;i++ ){
+        for( j=0;j<N;j++ ){
+            printf("%f ",m3[i][j] );
+        }
+        printf("\n");
+    }
+}
+
+作业六、请编写 strstr(char *str1,char *str2) 的实现代码；
+strstr 函数的功能是在 str1 中找 str2 首次出现的位置；
+int strstr(const char *str1,const char *str2)
+{
+    int i,j,len1 = strlen(str1),len2=strlen(str2);
+    // 字符串2 比字符串1 长，错误，用 -1  表示。
+    if ( len2>len1 || len2==0 || len1==0 ) return -1; 
+    for( i=0;i<len1;i++ ){
+        if ( str1[i]==str2[0] && (len1-i)>=len2 ){
+            for( j=1;j<len2;j++ ){
+                if ( str2[j]!=str1[i+j] ) break;
+            }
+            if ( j==len2 ) return i;
+        }
+    }
+    return -1;
+}
+
+作业七、实现函数 isnumber(char *str)函数（这里number是实数），
+在main中实现输入任意字符串，报告输入的字符串是否为合法的数字；
+int isnumber(const char *str)
+{
+    const char strNum[]="1234567890";
+    int hasDot,i,j,len = strlen(str);
+    if ( len<1 ) return 0;
+    i = 0; hasDot = 0;
+    // 判断是否有符号，'+'或者'-'
+    if ( str[0]=='+'|| str[0]=='-' ) i=1;    
+    for( ;i<len;i++ ){
+        // 判断是否已经有小数点
+        if ( str[i]=='.' ){
+            if ( hasDot==0 ){ 
+                hasDot = 1; continue; 
+            }else{
+                return 0;
+            }
+        }        
+        for( j=0;j<10;j++ ){
+            if ( strNum[j]==str[i] ) break;
+        }
+        if ( j==10 ) return 0;
+    }
+    return 1;
+}
+void main()
+{   
+    char str[256];
+    scanf("%s",str );
+    printf( "%s is Number? %d \n",str,isnumber(str) );
+}
+作业八、统计字符出现次数：
+void TolChar( const char *str )
+{
+    int i,sum[256],len,*pS;
+    pS = sum; len = strlen(str);
+    for( i=0;i<256;i++,pS++ ){ *pS=0; }    
+    for( i=0;i<len;i++,str++ ){
+        sum[*str]++;
+    }
+    for( pS=sum,i=0;i<256;i++,pS++ ){
+        if ( *pS ) printf("%c appear time: %d \n",i,*pS );
+    }
+}
+
+作业九、先定义一个图书信息的结构体，
+成员包括：书名， 作者，价格，
+然后在主程序中声明结构体数组，并完成如下功能:
+a.输入图书信息。
+b.输入的书名，然后在以上输入的信息中查询是否存
+  在此书的信息，并输出查询结果。
+
+struct BK{
+    char name[64];
+    char author[16];
+    float price;
+};
+void main()
+{
+    int n; char name[64];
+    printf("Please input book sum: ");
+    scanf("%d",&n );
+
+    BK *bkList = new BK[n];
+    printf("Please input book list: \n");
+    for ( int i=0;i<n;i++ ){
+        scanf("%s%s%f", bkList[i].name,bkList[i].author,&bkList[i].price );
+    }
+    printf("Please find name: \n");
+    scanf("%s",name );
+    for( i=0;i<n;i++ ){
+        if ( strcmp(bkList[i],name)==0 ){
+            printf("Find book: %s %s %f\n",bkList[i].name,bkList[i].author,bkList[i].price );
+        }
+    }
+    if ( i==n ){
+        printf("Not Find.");
+    }
+    delete[] bkList; 
+}
+作业十、读入一个C语言代码文件，统计文件中有效句子数、
+以及单词数（注：有空隔隔开的就计为单词，以分号结束的就计为句子）
+void main()
+{
+    char strFile[256],strLine[256];
+    int wordSum=0,sentenceSum=0;
+    printf("please input file name: \n" );    
+    scanf("%s",strFile );
+    FILE *fp = fopen( strFile,"rt" );
+    if ( !fp ){ printf("Open file fails."); return ; }
+    while( feof(fp) ){
+        fgets( strLine,256,fp );
+        int lineSz = strlen(strLine);
+        for( int i=0;i<lineSz;i++ ){
+            if ( strLine[i]==';' ) sentenceSum++;
+            if (strLine[i]!=' '&&strLine[i+1]==' ' ) wordSum ++;
+        }
+    }
+    fclose(fp);
+
+    printf("word sum: %d  sentence sum: %d \n",wordSum,sentenceSum );    
+}
+今天考试的参考
+
+struct PT{
+    float x,y;
+};
+int Find( PT *pPts,int n,float x,float y)
+{
+    int fi = 0,i;
+    float dis,dis0 = (pPts->x-x)*(pPts->x-x)+(pPts->y-y)*(pPts->y-y);
+    for( i=0;i<n;i++,pPts++ ){
+        dis = (pPts->x-x)*(pPts->x-x)+(pPts->y-y)*(pPts->y-y);
+        if ( dis>dis0 ){ dis0 = dis; fi = i; }
+    }
+    return fi;
+}
+void main()
+{
+    int i,n,idx; 
+    PT *pPts=NULL;
+    float x,y;
+    printf("Please input n:\n");
+    scanf("%d",&n);
+    pPts = new PT[n];
+    printf("Please input list:\n");
+    for(i=0;i<n;i++ ){
+        scanf("%f%f",&pPts[i].x,&pPts[i].y);
+    }
+    printf("Please input x,y:\n");
+    scanf("%f%f",&x,&y );
+    idx = Find(pPts,n,x,y);
+    printf("The nearest Pt is: %d %f %f\n",idx,pPts[idx].x,pPts[idx].y );
+    delete[] pPts;
+}
+
