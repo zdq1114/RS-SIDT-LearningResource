@@ -1,0 +1,25 @@
+题目：
+2、补充一个函数的代码，实现对一个字符串做如下判断: 
+(1)判断字符串是否是个数值（注意：可以是double或int）。
+(2)如果是数值将其转换为数值，否则分别统计字母与数字的个数。
+函数声明如下：
+bool IsNumber(char *pString, double &value,int &numSum,int &charSum); 
+
+
+bool IsNumber(char *pString, double &value,int &numSum,int &charSum)
+{
+    numSum = charSum = 0;
+    int dot=0;
+    char *p = pString;
+    for( *p!=0;p++ ){
+        if ( *p>='0'&&*p<='9' ) numSum++;
+        if ( *p>='a'&&*p<='Z' ) charSum++;
+        if ( *p=='.' ) dot++;        
+    }
+    if ( dot>1 ) return false;
+    if ( charSum>1 ) return false;
+    if ( (p-pString)==(numSum+dot) ){
+        value = atof(pString); return true;
+    }
+    return false;
+}

@@ -1,0 +1,47 @@
+CPP第10单元_异常作业
+1、设计如下描述的一个类 CHotPoints；
+      a) 包含有成员： 点数、点坐标数组（可以用 vector） 。
+      b) 包含方法（函数）：
+	b1) 添加新点到数组里。
+	b2) 在数组里面删除已有点(根据位置，删除最近点)。
+	b3) 根据位置查询最近点。
+	b4) 根据给定的位置范围（minx,miny）(maxx,maxy) 查询包含     的点数和点坐标数组，并作为一个新的 CHotPoints 返回
+    （提示：需要重载拷贝类构造函数）。
+
+// CPP第10单元_异常作业参考答案
+class CPt{
+public:
+    CPt(){};
+    ~CPt(){};
+    float m_x,m_y;
+};
+class CHotPoints
+{
+public:
+    CHotPoints(){};
+    ~CHotPoints(){};
+
+    vector <CPt> m_pts;    
+    void Append(CPt pt){ m_pts.push_back(pt); }
+    void DeletePt(CPt pt){ m_pts.erase(m_pts.begin()+GetNearest(pt));  }
+    int  GetNearest(CPt pt){
+        int fd=0,i,sum = m_pts.size();
+        double dis0=1E138,dis;
+        for( i=0;i<sum;i++ ){
+            dis = sqrt( (pt.m_x-m_pts[i].m_x)*(pt.m_x-m_pts[i].m_x) +
+                        (pt.m_y-m_pts[i].m_y)*(pt.m_y-m_pts[i].m_y) );
+            if ( dis0>dis ){ dis0=dis; fd=i; }
+        }
+        return fd;
+    }
+    CHotPoints GetRgn( float minx,float miny,float maxx,float maxy ){
+        CHotPoints newPts;
+        int i,sum = m_pts.size();
+        for( i=0;i<sum;i++ ){
+            if ( m_pts[i].m_x>minx && m_pts[i].m_x<maxx &&
+                 m_pts[i].m_y>miny && m_pts[i].m_y<maxy  )
+                 newPts.Append(m_pts[i]);
+        }
+        return newPts;
+    }
+};

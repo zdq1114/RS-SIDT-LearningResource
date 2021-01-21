@@ -1,0 +1,32 @@
+CPP第09单元_流和文件 作业：
+
+2、写一个 函数实现：在计算机的给定文件中是否含有 “机密” 子眼。
+提示：中文一个字占两个字符，因此要比较多个字符。
+BOOL IsSecretFile( char *filename );
+
+// CPP第09单元_流和文件参考答案
+BOOL IsSecretFile( char *filename )
+{
+    CFile file; char *ps="机密"; BOOL fd = FALSE;
+    if ( file.Open(filename,CFile::modeRead) ){
+        DWORD i,fsz = file.GetLength();
+        BYTE *p,*pBuf = new BYTE[fsz];
+        if ( pBuf ){ // 一次读入所有数据
+            file.Read( pBuf,fsz );
+            file.Close();        
+            for( i=0,p=pBuf;i<fsz-4;i++,p++ ){
+                if (p[0]==ps[0]&&p[1]==ps[1]&&p[2]==ps[2]&&p[3]==ps[3] ){ fd=TRUE; break; }
+            }
+            delete []pBuf;
+        }else{
+            BYTE b4[4]; // 一次读入4字节，然后倒退3字节
+            while( file.Read( b4,4 )==4 ){
+                file.Seek( -3,CFile::current );
+                if (b4[0]==ps[0]&&b4[1]==ps[1]&&b4[2]==ps[2]&&b4[3]==ps[3] ){ fd=TRUE; break; }
+            }
+            file.Close();   
+        }
+    }
+    return fd;
+}
+

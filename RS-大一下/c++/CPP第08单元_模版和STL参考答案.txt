@@ -1,0 +1,45 @@
+ CPP第08单元_模版和STL 作业
+1、编写一个冒泡排序的函数模板。
+2、先设计如下基本几何图形类: 
+      类点CPt、 线(CLn)；点是线的成员数据，用 vector 容器，在线上实现如下操作：
+（1）在 pos 位置前加入新点。
+（2）删除 pos 位置的点。
+（3）修改 pos 点的坐标。
+（3）返回点数。
+（pos是传入的参数）
+
+CPP第08单元_模版和STL参考答案
+
+template< class T>
+void PopSort(T *pList,int sz)
+{
+    int i,j; T t1;
+    for( i=0;i<sz;i++ ){
+        for( j=i;j<sz;j++ ){
+            if ( pList[j]>pList[i] ){
+                t1 = pList[i];
+                pList[i] = pList[j];
+                pList[j] = t1;
+            }
+        }
+    }
+};
+
+#include <vector>
+class CPt{
+public:
+    CPt(){};
+    ~CPt(){};
+    float m_x,m_y;
+};
+class CPline{
+public:
+    CPline(){};
+    ~CPline(){};
+    
+    vector <CPt> m_pts;    
+    void InsertPt(int pos,CPt pt){ m_pts.insert(m_pts.begin()+pos,pt); }
+    void DeletePt(int pos){ m_pts.erase(m_pts.begin()+pos); }
+    void ModityPt(int pos,CPt pt){ m_pts[pos]=pt; }
+    int GetPtSum(){ return m_pts.size(); };
+};

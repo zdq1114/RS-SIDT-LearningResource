@@ -1,0 +1,24 @@
+// 第六单元C++运算符重载作业-参考答案
+class CPt{
+public:
+    CPt(){};
+    ~CPt(){};
+    float m_x,m_y;
+};
+class CPline{
+public:
+    CPline(){ m_sum=0; };
+    ~CPline(){};
+
+    CPt m_pts[256];
+    int m_sum;
+
+    void AppendPt(CPt pt){ if (m_sum<255) m_pts[m_sum++]=pt; }
+    CPt& operator [](int idx){ return m_pts[idx]; }    
+    CPline& operator =(CPline& ln){
+        m_sum = ln.m_sum;
+        for( int i=0;i<m_sum;i++ ) m_pts[i]=ln.m_pts[i];
+        return *this;
+    }
+    void operator +(CPt& pt){ AppendPt(pt); }
+};
